@@ -11,7 +11,6 @@ matplotlib.use('TkAgg')
 
 class DigitClassifier(object):
 
-
     def __init__(self):
 
         self.svm = None

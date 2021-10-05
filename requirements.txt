@@ -1,0 +1,8 @@
+numpy==1.21.2
+opencv-python==4.5.3.56
+PyQt5==5.15.4
+scikit-image==0.18.3
+scikit-learn==1.0
+tqdm==4.62.3
+jupyter==1.0.0
+
