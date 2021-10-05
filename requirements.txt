@@ -5,4 +5,5 @@ scikit-image==0.18.3
 scikit-learn==1.0
 tqdm==4.62.3
 jupyter==1.0.0
+python-mnist==0.7
 
