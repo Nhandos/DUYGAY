@@ -83,7 +83,18 @@ class HoG_LinearSVM_SingleDigitClassifier(SingleDigitClassifier):
         self.svm = self.svm.load(model_path)
 
     def predict(self, image: np.ndarray) -> Tuple[DigitClass, float]:
-        """ Predicts digit class and a confidence score """
+        """ Predicts digit class and a confidence score 
+
+            Classify the input image to determine it's DigitClass and
+            confidence score (float) between [0, 1]
+
+            Args:
+                image: (np.ndarray) input image
+
+            Returns:
+                Tuple[DigitClass, score]
+
+        """
 
         feature_vector = self._extract_features(image)
         _, response = self.svm.predict(np.array([feature_vector], dtype=np.float32))
@@ -91,7 +102,16 @@ class HoG_LinearSVM_SingleDigitClassifier(SingleDigitClassifier):
         return response.squeeze(), 1.0
 
     def batch_predict(self, images: Iterable[np.ndarray]) -> List[Tuple[DigitClass, float]]:
-        """ Predict digit class and confidence score on multiple images """
+        """ Predict digit class and confidence score on multiple images 
+
+            Args:
+                images: Iterable[np.ndarray]
+
+            Returns:
+                Tuple[DigitClass, score]
+            
+
+        """
 
         features = []
         for image in tqdm.tqdm(images):

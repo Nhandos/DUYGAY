@@ -1,10 +1,8 @@
-import numpy as np
 from typing import Tuple, List
+import numpy as np
+import cv2
 from classifier.digit_classifier import SingleDigitClassifier
-
-def pre_processing(image):
-
-    return image
+from detector.text_detector import TextDetector
 
 
 class CurtinSignDetection(object):
@@ -28,13 +26,26 @@ class CurtinSignDetection(object):
 class CurtinSignDetector(object):
 
 
-    def __init__(self, singleDigitClassifier: SingleDigitClassifier):
+    def __init__(self, 
+            singleDigitClassifier: SingleDigitClassifier, 
+            textDetector: TextDetector 
+            ):
+
         self.singleDigitClassifier = singleDigitClassifier
+        self.textDetector = textDetector
 
     def detect(self, image:np.ndarray):
 
-        digit, _ = self.singleDigitClassifier.predict(image)
-        print(digit)
+        scores, bboxes = self.textDetector.detect(image)
+
+        output = image.copy()
+        for x1,y1,x2,y2 in bboxes:
+            cv2.rectangle(output, (x1,y1), (x2,y2), color=(255,0,0), thickness=1)
+            digit, _ = self.singleDigitClassifier.predict(image[y1:y2,x1:x2])
+            print(digit)
+
+        cv2.imshow('test', output)
+        cv2.waitKey(0)
 
 
 def detect_sign(image:np.ndarray, sign_detector: CurtinSignDetector) -> List[CurtinSignDetection]:

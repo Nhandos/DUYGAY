@@ -1,6 +1,10 @@
 import argparse
 
 
+
+class DigitDetector(
+
+
 def main(args):
 
     desc_database = []

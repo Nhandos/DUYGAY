@@ -10,6 +10,7 @@ MODEL_PATHS = {
 
 DIGIT_TEST_IMAGE_PATH = './data/digits_original'
 
+
 class Test_HoG_LinearSVM_SingleDigitClassifier(unittest.TestCase):
 
     def setUp(self):
@@ -38,5 +39,4 @@ class Test_HoG_LinearSVM_SingleDigitClassifier(unittest.TestCase):
             total_errors += n_errors
         print()
         print(f'Total Error rate = {total_errors/n_images * 100}%')
-
 
