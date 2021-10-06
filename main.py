@@ -19,6 +19,7 @@ def main(args):
 
     singleDigitClassifier = HoG_LinearSVM_SingleDigitClassifier()
     textDetector = DNN_EAST_TextDetector()
+    regionDetector = cv2.MSER_create(max_variation=0.1)
 
     try:
         textDetector.load(DNN_EAST_MODEL_PATH)
@@ -32,9 +33,10 @@ def main(args):
     else:
         singleDigitClassifier.load(DIGIT_CLASSIFIER_PATH)
 
-    if args.image:
-        image = cv2.imread(args.image)
-        detector = CurtinSignDetector(singleDigitClassifier, textDetector)
+    for image_path in  args.images:
+        image = cv2.imread(image_path)
+        detector = CurtinSignDetector(singleDigitClassifier, textDetector,
+                regionDetector)
         detect_sign(image, detector)
         
 
@@ -44,7 +46,7 @@ if __name__ == '__main__':
         help='Download EAST model pb file')
     parser.add_argument('--train_digit_classifier', action='store_true',
         help='Whether to train a new classifier from scratch')
-    parser.add_argument('image', type=str, nargs='?', help='input image')
+    parser.add_argument('images', type=str, nargs='+', help='input image')
 
     args = parser.parse_args()
     main(args)

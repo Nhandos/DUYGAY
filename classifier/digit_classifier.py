@@ -109,16 +109,16 @@ class HoG_LinearSVM_SingleDigitClassifier(SingleDigitClassifier):
 
             Returns:
                 Tuple[DigitClass, score]
-            
-
         """
 
         features = []
         for image in tqdm.tqdm(images):
             features.append(self._extract_features(image))
 
+
         features = np.array(features).astype(np.float32)
-        _, responses = self.svm.predict(features)
+        _, responses = self.svm.predict(features, cv2.ml.STAT_MODEL_RAW_OUTPUT)
+        
         result = [(response.squeeze(), 1.0) for response in responses]
 
         return result
