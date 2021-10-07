@@ -46,7 +46,7 @@ class CurtinSignDetector(object):
         output = image.copy()
 
         if len(bboxes) > 0:
-            background_thresh = 160.0
+            background_thresh = 200.0
             roi_idx = []
             for i, (x1,y1,x2,y2) in enumerate(bboxes):
 
@@ -97,6 +97,7 @@ class CurtinSignDetector(object):
                             cv2.rectangle(output, (x1+xmin, y1+ymax), (x1+xmax, y1+ymin), color=(0,255,0), thickness=1)
                             digit, _ = self.singleDigitClassifier.predict(hsv[ymin:ymax,xmin:xmax,2])
                             number_location.append((xmin, str(int(digit))))
+
                     number_location.sort(key=lambda x: x[0])
                     digit_str = ''.join([number[1] for number in number_location])
                     cv2.putText(output, digit_str,
@@ -104,7 +105,6 @@ class CurtinSignDetector(object):
                             fontScale=0.7,color=(0,0,255), thickness=2)
 
                 cv2.rectangle(output, (x1,y1), (x2,y2), color=(255,0,0), thickness=3)
-
 
         cv2.imshow('test', output)
         cv2.waitKey(0)

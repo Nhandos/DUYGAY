@@ -23,7 +23,7 @@ def main(args):
 
     try:
         textDetector.load(DNN_EAST_MODEL_PATH)
-    except IOError:
+    except cv2.error:
         print('Model does not exists. Run with --download_EAST_model')
         return
     
