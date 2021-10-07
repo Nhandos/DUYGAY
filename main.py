@@ -35,10 +35,14 @@ def main(args):
         singleDigitClassifier.load(DIGIT_CLASSIFIER_PATH)
 
     for image_path in  args.images:
-        image = cv2.imread(image_path)
-        detector = CurtinSignDetector(singleDigitClassifier, textDetector,
-                regionDetector)
-        detect_sign(image, detector)
+        try:
+            image = cv2.imread(image_path)
+            detector = CurtinSignDetector(singleDigitClassifier, textDetector,
+                    regionDetector)
+            detect_sign(image, detector)
+        except cv2.error as e:
+            print(f'{image_path} failed due to cv2.error')
+            print(e)
         
 
 if __name__ == '__main__':
@@ -50,4 +54,4 @@ if __name__ == '__main__':
     parser.add_argument('images', type=str, nargs='+', help='input image')
 
     args = parser.parse_args()
-    main(args)
+    main(args) 

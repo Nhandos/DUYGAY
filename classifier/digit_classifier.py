@@ -165,6 +165,7 @@ class HoG_LinearSVM_SingleDigitClassifier(SingleDigitClassifier):
         self.train(train_images, train_labels, test_images, test_labels)
 
     def train_CHAR74K(self, dataset_path):
+        """ Train the classifier with CHAR74K dataset """
 
         images = []
         labels = []
@@ -180,7 +181,7 @@ class HoG_LinearSVM_SingleDigitClassifier(SingleDigitClassifier):
                 labels.append(i)
 
         n_samples = len(images)
-        test_val_ratio = 0.85
+        test_val_ratio = 0.9
         index = list(range(n_samples))
         random.shuffle(index)
         split_idx = int(test_val_ratio * n_samples)
@@ -198,6 +199,4 @@ class HoG_LinearSVM_SingleDigitClassifier(SingleDigitClassifier):
             test_labels.append(labels[index[k]])
 
         self.train(train_images, train_labels, test_images, test_labels)
-
-
 
