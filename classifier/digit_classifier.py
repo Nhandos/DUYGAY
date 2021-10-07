@@ -1,6 +1,9 @@
 from abc import ABC, abstractmethod
-from enum import Enum
+from enum import Enum 
 from typing import Tuple, Iterable, List
+import glob
+import os
+import random
 
 import cv2
 import numpy as np
@@ -63,6 +66,7 @@ class HoG_LinearSVM_SingleDigitClassifier(SingleDigitClassifier):
     def _extract_features(self, image:np.ndarray):
 
         image = self._preprocess(image)
+
         hog = cv2.HOGDescriptor(
             self.winSize,
             self.blockSize,
@@ -123,18 +127,7 @@ class HoG_LinearSVM_SingleDigitClassifier(SingleDigitClassifier):
 
         return result
 
-    def train_MNIST(self, dataset_path):
-        """ Train the classifier with MNIST dataset """
-
-        mndata = MNIST(dataset_path)
-        train_images, train_labels = mndata.load_training()
-        test_images, test_labels  = mndata.load_testing()
-        
-        # Convert to numpy images
-        train_images = [np.array(image, dtype=np.uint8).reshape(28, 28) for
-                image in train_images]
-        test_images = [np.array(image, dtype=np.uint8).reshape(28, 28) for
-                image in test_images]
+    def train(self, train_images, train_labels, test_images, test_labels):
 
         print('Extracting Feature from images')
         X = []
@@ -154,4 +147,57 @@ class HoG_LinearSVM_SingleDigitClassifier(SingleDigitClassifier):
         Y = test_labels
         n_error = sum([1 if expected != actual[0] else 0 for expected, actual in zip(Y, X)])
         print(f'Error rate = {n_error/len(test_images) * 100}%') 
+
+    def train_MNIST(self, dataset_path):
+        """ Train the classifier with MNIST dataset """
+
+        mndata = MNIST(dataset_path)
+        train_images, train_labels = mndata.load_training()
+        test_images, test_labels  = mndata.load_testing()
+        
+        # Convert to numpy images
+        train_images = [np.array(image, dtype=np.uint8).reshape(28, 28) for
+                image in train_images]
+        test_images = [np.array(image, dtype=np.uint8).reshape(28, 28) for
+                image in test_images]
+
+        print(train_labels[0])
+        self.train(train_images, train_labels, test_images, test_labels)
+
+    def train_CHAR74K(self, dataset_path):
+
+        images = []
+        labels = []
+        for i, digit in enumerate(['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine']):
+            
+            img_paths = glob.glob(os.path.join(dataset_path, f'./{digit}/*.png'))
+            for img_path in img_paths:
+                image = cv2.imread(img_path, 0)
+
+                # invert color
+                image = 255 - image
+                images.append(image)
+                labels.append(i)
+
+        n_samples = len(images)
+        test_val_ratio = 0.85
+        index = list(range(n_samples))
+        random.shuffle(index)
+        split_idx = int(test_val_ratio * n_samples)
+
+        train_images = []
+        train_labels = []
+        test_images = []
+        test_labels = []
+        for k in range(0, split_idx):
+            train_images.append(images[index[k]])
+            train_labels.append(labels[index[k]])
+
+        for k in range(split_idx, n_samples):
+            test_images.append(images[index[k]])
+            test_labels.append(labels[index[k]])
+
+        self.train(train_images, train_labels, test_images, test_labels)
+
+
 

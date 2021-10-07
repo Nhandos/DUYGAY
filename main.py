@@ -10,9 +10,9 @@ from sign_detector import detect_sign, CurtinSignDetector
 
 # CONFIGS
 MNIST_PATH            = './data/mnist/'                                # path to mnist dataset
+CHAR74K_PATH          = './data/char74k/Fnt/'                          # path to char74k dataset
 DIGIT_CLASSIFIER_PATH = './classifier/digit_svm.yml'                   # digit classifier SVM model
 DNN_EAST_MODEL_PATH   = './detector/frozen_east_text_detection.pb'     # text detector DNN model
-
 
 def main(args):
 
@@ -28,7 +28,8 @@ def main(args):
         return
     
     if args.train_digit_classifier:
-        singleDigitClassifier.train_MNIST(MNIST_PATH)
+        #singleDigitClassifier.train_MNIST(MNIST_PATH)
+        singleDigitClassifier.train_CHAR74K(CHAR74K_PATH)
         singleDigitClassifier.save(DIGIT_CLASSIFIER_PATH)
     else:
         singleDigitClassifier.load(DIGIT_CLASSIFIER_PATH)
